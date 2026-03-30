@@ -1,87 +1,89 @@
 ﻿import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import clientPromise from "@/lib/mongodb";
 
-// 友链数据的存储路径
-const dataFilePath = path.join(process.cwd(), "data", "friends.json");
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    if (fs.existsSync(dataFilePath)) {
-       const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-       // 移除可能会因为编码造成的BOM头
-       const cleanContent = fileContent.charCodeAt(0) === 0xFEFF ? fileContent.slice(1) : fileContent;
-       if (!cleanContent.trim()) {
-           return NextResponse.json({ friends: [] });
-       }
-       const data = JSON.parse(cleanContent);
-       // Handle case where parsed is just an array instead of { friends: [...] }
-       if (Array.isArray(data)) {
-           return NextResponse.json({ friends: data });
-       }
-       return NextResponse.json({ friends: data.friends || [] });
-    }
-    return NextResponse.json({ friends: [] });
-  } catch (error) {
-    console.error("Failed to read friends data:", error);
-    return NextResponse.json({ error: "Failed to read friends data" }, { status: 500 });
+    const client = await clientPromise;
+    const db = client.db("codelife_blog");
+    const friendsCollection = db.collection("friends");
+    
+    const friends = await friendsCollection.find({}).toArray();
+    
+    // Remove MongoDB _id for the frontend
+    const cleanedFriends = friends.map(f => {
+      const { _id, ...rest } = f;
+      return rest;
+    });
+
+    return NextResponse.json({ friends: cleanedFriends.length > 0 ? cleanedFriends : [] });
+  } catch (error: any) {
+    console.error("Error fetching friends:", error);
+    return NextResponse.json({ friends: [] }); // Fallback to empty array
   }
 }
 
-export async function POST(request: Request) {try{const authHeader = request.headers.get("Authorization");if (authHeader !== (`Bearer ` + process.env.ADMIN_PASSWORD)) {return NextResponse.json({ error: "Unauthorized" }, { status: 401 });}
-    const newFriend = await request.json();
-    
-    let friendsData: any = { friends: [] };
-    if (fs.existsSync(dataFilePath)) {
-       const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-       const cleanContent = fileContent.charCodeAt(0) === 0xFEFF ? fileContent.slice(1) : fileContent;
-       if (cleanContent.trim()) {
-           const parsed = JSON.parse(cleanContent);
-           // Handle case where parsed is just an array instead of { friends: [...] }
-           if (Array.isArray(parsed)) {
-               friendsData = { friends: parsed };
-           } else if (parsed && Array.isArray(parsed.friends)) {
-               friendsData = parsed;
-           }
-       }
-    }
-    
-    // 生成ID并且追加数据
-    newFriend.id = Date.now().toString();
-    friendsData.friends.push(newFriend);
-
-    // 覆盖写回文件
-    const jsonString = JSON.stringify(friendsData, null, 2);
-    // 使用纯 Node.js 写文件以避免 PowerShell 添加 BOM头
-    fs.writeFileSync(dataFilePath, jsonString, 'utf-8');
-
-    return NextResponse.json({ success: true, friend: newFriend });
-  } catch (error) {
-    console.error("Error saving friend data:", error);
-    return NextResponse.json({ error: "Failed to save friend data" }, { status: 500 });
-  }
-}
-
-export async function PUT(request: Request) {
+export async function POST(req: Request) {
   try {
-    const authHeader = request.headers.get("Authorization");
-    if (authHeader !== (`Bearer ` + process.env.ADMIN_PASSWORD)) {
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader !== ('Bearer ' + process.env.ADMIN_PASSWORD)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const data = await request.json();
+
+    const { name, url, avatar, desc, id } = await req.json();
     
-    // Expecting { friends: [...] }
-    if (!data || !Array.isArray(data.friends)) {
-      return NextResponse.json({ error: "Invalid data format" }, { status: 400 });
+    if (!name || !url || !avatar) {
+       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    const jsonString = JSON.stringify(data, null, 2);
-    fs.writeFileSync(dataFilePath, jsonString, 'utf-8');
+    const client = await clientPromise;
+    const db = client.db("codelife_blog");
+    const friendsCollection = db.collection("friends");
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error updating friends data:", error);
-    return NextResponse.json({ error: "Failed to update friend data" }, { status: 500 });
+    const newFriend = {
+       name,
+       url,
+       avatar,
+       desc: desc || "",
+       id: id || Date.now().toString()
+    };
+
+    await friendsCollection.insertOne(newFriend);
+    return NextResponse.json({ success: true, friend: newFriend });
+
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader !== ('Bearer ' + process.env.ADMIN_PASSWORD)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { friends } = body;
+    
+    if (!friends || !Array.isArray(friends)) {
+      return NextResponse.json({ error: "Invalid friends data" }, { status: 400 });
+    }
+
+    const client = await clientPromise;
+    const db = client.db("codelife_blog");
+    const friendsCollection = db.collection("friends");
+
+    // Replace all friends (bulk operations are better but this is simple enough for few friends)
+    await friendsCollection.deleteMany({});
+    if (friends.length > 0) {
+      await friendsCollection.insertMany(friends);
+    }
+
+    return NextResponse.json({ success: true, friends });
+  } catch (error: any) {
+     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 

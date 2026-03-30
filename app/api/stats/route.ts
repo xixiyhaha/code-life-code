@@ -1,56 +1,61 @@
-﻿import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { NextResponse } from "next/server";
+import clientPromise from "@/lib/mongodb";
 
-// 统计数据的存储路径
-const dataFilePath = path.join(process.cwd(), "data", "stats.json");
+export const dynamic = "force-dynamic";
 
-function getStats() {
+export async function GET(req: Request) {
   try {
-    if (fs.existsSync(dataFilePath)) {
-       const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-       const cleanContent = fileContent.charCodeAt(0) === 0xFEFF ? fileContent.slice(1) : fileContent;
-       if (cleanContent.trim()) {
-           return JSON.parse(cleanContent);
-       }
-    }
-  } catch (e) {
-    console.error(e);
-  }
-  return { views: 0, visitors: 0, ips: [] };
-}
+    const client = await clientPromise;
+    const db = client.db("codelife_blog");
+    const statsCollection = db.collection("stats");
 
-export async function GET() {
-  const stats = getStats();
-  return NextResponse.json({ views: stats.views || 0, visitors: stats.visitors || 0 });
-}
+    // Fetch IP from request headers
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    const remoteIp = req.headers.get('x-real-ip');
+    let ip = (forwardedFor ? forwardedFor.split(',')[0] : remoteIp) || 'unknown';
 
-export async function POST(req: Request) {
-  try {
-    const stats = getStats();
-    
-    // 获取由代理传递的真实 IP
-    const forwarded = req.headers.get("x-forwarded-for");
-    const realtimeIp = req.headers.get("x-real-ip");
-    let ip = forwarded ? forwarded.split(/, /)[0] : realtimeIp;
-    if (!ip) ip = "unknown";
-
-    stats.views = (stats.views || 0) + 1;
-    if (!stats.ips) stats.ips = [];
-
-    if (ip !== "unknown" && !stats.ips.includes(ip)) {
-      stats.ips.push(ip);
-      stats.visitors = (stats.visitors || 0) + 1;
-    } else if (ip === "unknown") {
-      // 本地或者未知IP时不增加访客数，或者可以随意增加
-      // 这里为了本地测试效果，未知IP如果有 views > 0，这里默认就不去重了
+    // Get current stats document, or create it if missing
+    let stats = await statsCollection.findOne({ _id: "global_stats" as any });
+    if (!stats) {
+      stats = { _id: "global_stats", views: 0, visitors: 0, ips: [] } as any;
     }
 
-    fs.writeFileSync(dataFilePath, JSON.stringify(stats, null, 2), 'utf-8');
+    // Increment views
+    const newViews = ((stats?.views) || 0) + 1;
+    let ips = (stats?.ips) || [];
+    let newVisitors = (stats?.visitors) || 0;
 
-    return NextResponse.json({ views: stats.views, visitors: stats.visitors || 1 });
-  } catch (error) {
-    console.error("Failed to update stats:", error);
+    // Check unique visitor
+    if (ip !== 'unknown' && !ips.includes(ip)) {
+      ips.push(ip);
+      newVisitors += 1;
+    }
+
+    // Determine if we need to filter and cap the IPs array to prevent massive bloating
+    if (ips.length > 5000) {
+      ips = ips.slice(ips.length - 5000); // keep last 5000 approx
+    }
+
+    await statsCollection.updateOne(
+      { _id: "global_stats" as any },
+      { 
+        $set: { 
+          views: newViews, 
+          visitors: newVisitors, 
+          ips: ips 
+        } 
+      },
+      { upsert: true }
+    );
+
+    return NextResponse.json({
+       views: newViews,
+       visitors: newVisitors
+    });
+
+  } catch (error: any) {
+    console.error("Stats Error:", error);
+    // fallback
     return NextResponse.json({ views: 0, visitors: 0 });
   }
 }
