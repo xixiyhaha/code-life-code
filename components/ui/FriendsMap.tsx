@@ -214,9 +214,9 @@ export function FriendsMap() {
             
             {/* Tooltip trigger space matching group bounds */}
           </div>
-          <div className="absolute top-full mt-2 px-3 py-1.5 bg-white/90 dark:bg-black/90 text-gray-800 dark:text-gray-200 rounded text-xs font-medium shadow-xl backdrop-blur transform -translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all pointer-events-none whitespace-nowrap z-50 flex flex-col items-center">
-            <span className="font-bold">{node.name}</span>
-            {node.desc && <span className="text-[10px] text-gray-500 font-normal mt-0.5 max-w-[120px] truncate">{node.desc}</span>}
+            <div className="absolute top-full mt-2 px-3 py-1.5 bg-white/90 dark:bg-black/90 text-gray-800 dark:text-gray-200 rounded text-xs font-medium shadow-xl backdrop-blur transform -translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all pointer-events-none z-50 flex flex-col items-center w-max max-w-[240px] text-center">
+              <span className="font-bold whitespace-nowrap">{node.name}</span>
+              {node.desc && <span className="text-[10px] text-gray-500 font-normal mt-0.5 whitespace-normal break-words leading-relaxed">{node.desc}</span>}
           </div>
         </motion.a>
       ))}
