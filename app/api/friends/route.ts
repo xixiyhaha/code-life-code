@@ -1,4 +1,5 @@
 ﻿import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import clientPromise from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
@@ -50,6 +51,9 @@ export async function POST(req: Request) {
     };
 
     await friendsCollection.insertOne(newFriend);
+    revalidatePath("/friends");
+    revalidatePath("/");
+    revalidatePath("/admin/friends");
     return NextResponse.json({ success: true, friend: newFriend });
 
   } catch (error: any) {
@@ -81,6 +85,9 @@ export async function PUT(req: Request) {
       await friendsCollection.insertMany(friends);
     }
 
+    revalidatePath("/friends");
+    revalidatePath("/");
+    revalidatePath("/admin/friends");
     return NextResponse.json({ success: true, friends });
   } catch (error: any) {
      return NextResponse.json({ error: error.message }, { status: 500 });
