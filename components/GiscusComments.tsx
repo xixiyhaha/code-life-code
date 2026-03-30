@@ -1,0 +1,43 @@
+"use client";
+
+import Giscus from "@giscus/react";
+import { useEffect, useState } from "react";
+
+export default function GiscusComments() {
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const updateTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      // 匹配无边框的轻量级主题，和整体博客更搭
+      setTheme(isDark ? "transparent_dark" : "light");
+    };
+    
+    updateTheme();
+    
+    // 监听暗黑模式切换
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="mt-6 w-full pt-4 border-t border-gray-100 dark:border-gray-800/60 transition-all duration-500 ease-in-out">
+      <Giscus
+        id="comments"
+        repo="xixiyhaha/code-life-blog"
+        repoId="R_kgDORzI6uw" // TODO: 去 https://giscus.app 获取
+        category="Announcements" 
+        categoryId="DIC_kwDORzI6u84C5iYB" // TODO: 去 https://giscus.app 获取
+        mapping="pathname"
+        reactionsEnabled="1"
+        emitMetadata="0"
+        inputPosition="top"
+        theme={theme}
+        lang="zh-CN"
+        loading="lazy"
+      />
+    </div>
+  );
+}

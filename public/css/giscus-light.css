@@ -1,0 +1,73 @@
+main {
+  --color-prettier-commits: #00AEEC;
+  --color-canvas-default: transparent;
+  --color-canvas-overlay: #ffffff;
+  --color-canvas-inset: #ffffff;
+  --color-canvas-subtle: #f4f5f7;
+  --color-border-default: transparent;
+  --color-border-muted: #e3e5e7;
+  --color-border-subtle: rgba(27, 31, 36, 0.15);
+  --color-shadow-medium: 0 3px 6px rgba(140, 149, 159, 0.15);
+  --color-shadow-large: 0 8px 24px rgba(140, 149, 159, 0.2);
+  --color-shadow-extra-large: 0 12px 28px rgba(140, 149, 159, 0.3);
+  --color-neutral-emphasis-plus: #24292f;
+  --color-neutral-emphasis: #8c9296; /* Bilibili text muted */
+  --color-neutral-muted: rgba(175, 184, 193, 0.2);
+  --color-neutral-subtle: rgba(234, 236, 240, 0.5);
+  --color-accent-fg: #00AEEC;
+  --color-accent-emphasis: #00AEEC;
+  --color-accent-muted: rgba(0, 174, 236, 0.4);
+  --color-accent-subtle: rgba(0, 174, 236, 0.1);
+  --color-success-fg: #2da44e;
+  --color-success-emphasis: #2da44e;
+  --color-danger-fg: #cf222e;
+  --color-danger-emphasis: #a40e26;
+  --color-primer-border-active: #00AEEC;
+
+  --color-btn-text: #24292f;
+  --color-btn-bg: #f3f4f6;
+  --color-btn-border: transparent;
+  --color-btn-shadow: 0 0 transparent;
+  --color-btn-inset-shadow: 0 0 transparent;
+  --color-btn-hover-bg: #e5e7eb;
+  --color-btn-hover-border: transparent;
+  --color-btn-active-bg: #d1d5db;
+  --color-btn-active-border: transparent;
+  --color-btn-selected-bg: #d1d5db;
+
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #00AEEC;
+  --color-btn-primary-border: #00AEEC;
+  --color-btn-primary-shadow: 0 0 transparent;
+  --color-btn-primary-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --color-btn-primary-hover-bg: #0098CE;
+  --color-btn-primary-hover-border: #0098CE;
+  --color-btn-primary-selected-bg: #0098CE;
+  --color-btn-primary-selected-shadow: inset 0 1px 0 rgba(0, 45, 17, 0.2);
+  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.8);
+  --color-btn-primary-disabled-bg: #80D7F6;
+  --color-btn-primary-disabled-border: transparent;
+  
+  --color-fg-default: #222226;
+  --color-fg-muted: #99a2aa;
+  --color-fg-subtle: #99a2aa;
+}
+
+/* Bilibili UI adjustments */
+.timeline-comment, .timeline-comment-header { background: transparent !important; border: none !important; }
+.timeline-comment::before, .timeline-comment::after { display: none !important; }
+.timeline-comment { border-bottom: 1px solid #e3e5e7 !important; border-radius: 0 !important; }
+.avatar, .timeline-comment-avatar { border-radius: 50% !important; border: none !important; }
+.color-bg-canvas { background: transparent !important; }
+
+/* Bilibili Style Input Box */
+.form-control { background-color: var(--color-canvas-subtle) !important; border: 1px solid transparent !important; border-radius: 6px !important; }
+.form-control:focus { background-color: #fff !important; border: 1px solid #00AEEC !important; outline: none !important; box-shadow: none !important;}
+
+/* 隐藏不必要的“预览”按钮和Markdown工具栏以保持简洁 */
+.tabnav-tabs { border-bottom: none !important; }
+.tabnav-tab:nth-child(2) { display: none !important; } 
+.tabnav-tab { border: none !important; background: transparent !important; font-weight: normal !important; color: #99a2aa !important; }
+.tabnav-tab[aria-selected="true"] { color: #00AEEC !important; font-weight: bold !important; border-bottom: none !important; }
+.markdown-toolbar { display: none !important; }
+.timeline-comment-header-text { margin-left: 4px; font-weight: 500; font-size: 14px; color: #fb7299 !important; }
