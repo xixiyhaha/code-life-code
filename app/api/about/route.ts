@@ -1,4 +1,5 @@
 ﻿import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { updateAboutGithub } from "@/lib/github";
 import { getAboutData } from "@/lib/posts";
 import matter from "gray-matter";
@@ -45,6 +46,8 @@ export async function POST(req: Request) {
 
     const fileContent = matter.stringify(content || "", frontmatter);
     await updateAboutGithub(fileContent, "Update about page via API");
+    revalidatePath('/about');
+    revalidatePath('/');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

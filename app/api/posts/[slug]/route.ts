@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { deletePostFromGithub, extractAndCleanImages, deleteImageFromGithub, publishPostToGithub } from "@/lib/github";
 import matter from "gray-matter";
 
@@ -25,7 +26,7 @@ export async function DELETE(
     // 再删除文章本身
     await deletePostFromGithub(slug);
 
-    return NextResponse.json({ success: true });
+    revalidatePath('/', 'layout'); revalidatePath('/blog', 'page'); revalidatePath('/plog', 'page'); return NextResponse.json({ success: true});
   } catch (error) {
     console.error("Error deleting post:", error);
     return NextResponse.json(
@@ -66,7 +67,7 @@ export async function PUT(
     const fileContent = matter.stringify(content, frontmatter);
     await publishPostToGithub(slug, fileContent, `Update ${type}: ${slug}`);
 
-    return NextResponse.json({ success: true, slug });
+    revalidatePath('/', 'layout'); revalidatePath('/blog', 'page'); revalidatePath('/plog', 'page'); return NextResponse.json({ success: true});
   } catch (error: any) {
     console.error("Error updating post:", error);
     return NextResponse.json(

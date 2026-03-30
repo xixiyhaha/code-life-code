@@ -1,4 +1,5 @@
 ﻿import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { publishPostToGithub } from "@/lib/github";
 import matter from "gray-matter";
 
@@ -35,6 +36,12 @@ export async function POST(req: Request) {
 
     const fileContent = matter.stringify(content, frontmatter);
     await publishPostToGithub(slug, fileContent, `Publish ${type}: ${slug}`);
+
+    // Revalidate all post lists on the site
+    revalidatePath("/", "layout");
+    revalidatePath("/blog", "page");
+    revalidatePath("/plog", "page");
+    revalidatePath("/archive", "page");
 
     return NextResponse.json({ success: true, slug });
   } catch (error: any) {
