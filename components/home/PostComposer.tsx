@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Send, Image as ImageIcon, FileText, Type, X, FileUp, Tag, AlertCircle, File as FileIcon } from "lucide-react";
 import clsx from "clsx";
 
-type PostType = "note" | "post";
+type PostType = "note" | "post" | "announcement";
 
 const AVAILABLE_TAGS = ["C++", "Python", "深度学习", "前端", "后端", "算法", "生活"];
 

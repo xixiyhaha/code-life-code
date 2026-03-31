@@ -1,9 +1,9 @@
-import { octokit, BLOG_REPO_OWNER, BLOG_REPO_NAME } from "./github";
+﻿import { octokit, BLOG_REPO_OWNER, BLOG_REPO_NAME } from "./github";
 import matter from "gray-matter";
 
 export interface Post {
   slug: string;
-  type: "post" | "note";
+  type: "post" | "note" | "announcement";
   title?: string;
   date: string;
   content: string;

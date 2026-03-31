@@ -9,6 +9,22 @@ export async function GET(req: Request) {
     const db = client.db("codelife_blog");
     const statsCollection = db.collection("stats");
 
+    const stats = await statsCollection.findOne({ _id: "global_stats" as any });
+    return NextResponse.json({
+       views: stats?.views || 0,
+       visitors: stats?.visitors || 0
+    });
+  } catch (error: any) {
+    return NextResponse.json({ views: 0, visitors: 0 });
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const client = await clientPromise;
+    const db = client.db("codelife_blog");
+    const statsCollection = db.collection("stats");
+
     // Fetch IP from request headers
     const forwardedFor = req.headers.get('x-forwarded-for');
     const remoteIp = req.headers.get('x-real-ip');
