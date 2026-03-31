@@ -80,9 +80,11 @@ export default async function PostPage(
         </div>
 
         <header className="mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 tracking-tight leading-tight mb-4">
-            {post.title || "无标题"}
-          </h1>
+          {post.title && (
+            <h1 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 tracking-tight leading-tight mb-4">
+              {post.title}
+            </h1>
+          )}
           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
             <time dateTime={post.date}>
               {format(new Date(post.date), "yyyy年MM月dd日 HH:mm", { locale: zhCN })}

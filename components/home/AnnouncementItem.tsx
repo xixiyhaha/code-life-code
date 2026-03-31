@@ -97,23 +97,18 @@ export function AnnouncementItem({ post, isLatest = false }: { post: Post, isLat
       )}
       
       <div className="bg-white dark:bg-gray-900/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <Link href={`/post/${post.slug}`} className="text-lg font-bold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            {post.title || '无标题公告'}
-          </Link>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <time className="text-xs font-medium text-gray-500 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full w-max">
+            {new Date(post.date).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(/\//g, '-')}
+          </time>
           
-          <div className="flex items-center gap-3">
-            <time className="text-xs font-medium text-gray-500 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full w-max">
-              {new Date(post.date).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(/\//g, '-')}
-            </time>
-            
-            {isAdmin && !isEditing && (
-              <div className="relative">
-                <button onClick={(e) => { e.preventDefault(); setShowMenu(!showMenu); }} className="p-1.5 bg-gray-100/50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-500">
-                  <MoreHorizontal className="w-4 h-4" />
-                </button>
+          {isAdmin && !isEditing && (
+            <div className="relative">
+              <button onClick={(e) => { e.preventDefault(); setShowMenu(!showMenu); }} className="p-1.5 bg-gray-100/50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-500">
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
 
-                {showMenu && (
+              {showMenu && (
                   <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-10">
                     <button 
                       onClick={(e) => { e.preventDefault(); setIsEditing(true); setShowMenu(false); }}
@@ -131,9 +126,8 @@ export function AnnouncementItem({ post, isLatest = false }: { post: Post, isLat
                     </button>
                   </div>
                 )}
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         
         {isEditing ? (

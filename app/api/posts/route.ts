@@ -27,7 +27,10 @@ export async function POST(req: Request) {
       frontmatter.tags = tags;
     }
 
-    if (type === "announcement") { slug = `announcement-${timestamp}`; frontmatter.title = title || "公告"; } else if (type === "post") {
+    if (type === "announcement") { 
+      slug = `announcement-${timestamp}`; 
+      if (title) frontmatter.title = title;
+    } else if (type === "post") {
       slug = `post-${timestamp}`;
       frontmatter.title = title || "Untitled Post";
     } else {
