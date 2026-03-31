@@ -9,6 +9,18 @@
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "build"
+		},
+		{
+			"label": "push changes",
+			"type": "shell",
+			"command": "git add . && git commit -m \"fix markdown rendering on homepage\" && git push origin HEAD",
+			"isBackground": false
+		},
+		{
+			"label": "deploy_fix",
+			"type": "shell",
+			"command": "cd \"D:\\Desktop\\博客\\code-life-blog\" && git add . && git commit -m \"fix sidebar\" && git push origin main",
+			"isBackground": false
 		}
 	]
 }

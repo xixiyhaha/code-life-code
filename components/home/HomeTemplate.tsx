@@ -4,6 +4,8 @@ import { PostItem } from "@/components/home/PostItem";
 import { AdminClientWrapper } from "@/components/home/AdminClientWrapper";
 import { StatsPanel } from "@/components/home/StatsPanel";
 import { Megaphone } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export async function HomeTemplate({ showAdminControls = false }: { showAdminControls?: boolean }) {
   // 服务端拉取数据
@@ -106,9 +108,11 @@ export async function HomeTemplate({ showAdminControls = false }: { showAdminCon
             
             {latestAnnouncement ? (
               <Link href={`/post/${latestAnnouncement.slug}`} className="group block">
-                <h4 className="text-gray-800 dark:text-gray-200 font-medium leading-relaxed group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-3">
-                  {latestAnnouncement.title || "无标题公告"}
-                </h4>
+                <div className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors line-clamp-[8] prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-a:text-blue-500">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {latestAnnouncement.content}
+                  </ReactMarkdown>
+                </div>
                 <div className="flex items-center justify-between mt-4">
                   <p className="text-xs text-gray-500 font-medium">
                     {new Date(latestAnnouncement.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
