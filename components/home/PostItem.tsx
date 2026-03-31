@@ -244,7 +244,7 @@ export function PostItem({ post }: { post: Post }) {
   }
 
   return (
-    <div className="relative mb-10 bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800/60 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow group/card">
+    <div id={post.slug} className="relative mb-10 bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800/60 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow group/card scroll-mt-24">
       <div className="flex items-center justify-between mb-4">
         <div className="text-sm font-medium text-gray-500 dark:text-gray-400">  
           {timeAgo}
