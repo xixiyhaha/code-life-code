@@ -52,7 +52,6 @@ export async function getAllPosts(): Promise<Post[]> {
     return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error: any) {
     if (error.status === 404) {
-      // 如果目录还不存在，返回空数组
       return [];
     }
     console.error("Error fetching posts:", error);
@@ -62,28 +61,14 @@ export async function getAllPosts(): Promise<Post[]> {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const { data: fileData } = await octokit.rest.repos.getContent({
-      owner: BLOG_REPO_OWNER,
-      repo: BLOG_REPO_NAME,
-      path: `content/posts/${slug}.md`,
-    });
-
-    if (Array.isArray(fileData) || !("content" in fileData)) return null;
-
-    const content = Buffer.from(fileData.content, "base64").toString("utf-8");
-    const { data: frontmatter, content: markdownBody } = matter(content);
-
-    return {
-      slug,
-      type: frontmatter.type || (slug.startsWith("note-") ? "note" : "post"),
-      title: frontmatter.title,
-      date: frontmatter.date || new Date().toISOString(),
-      content: markdownBody,      tags: frontmatter.tags || [],
-      sha: fileData.sha,    };
+    // Instead of querying the specific path which might suffer from URL decoding/encoding 
+    // or GitHub API pathing issues, we fetch all posts (which is what the site already does) 
+    // and find the matching slug. This guarantees 100% consistency with the generated links.
+    const allPosts = await getAllPosts();
+    const post = allPosts.find((p) => p.slug === slug || p.slug === decodeURIComponent(slug) || encodeURIComponent(p.slug) === slug);
+    return post || null;
   } catch (error: any) {
-    if (error.status !== 404) {
-      console.error(`Error fetching post ${slug}:`, error);
-    }
+    console.error(`[DEBUG] Error matching post ${slug}:`, error.message || error, error.status);
     return null;
   }
 }
