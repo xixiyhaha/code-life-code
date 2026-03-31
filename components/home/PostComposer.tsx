@@ -74,7 +74,7 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
 
   useEffect(() => {
     localStorage.setItem(`draft-${activeTab}-content`, content);
-    if (activeTab === "post") {
+    if (activeTab === "post" || activeTab === "announcement") {
       localStorage.setItem(`draft-${activeTab}-title`, title);
       localStorage.setItem(`draft-${activeTab}-tags`, JSON.stringify(selectedTags));
     }
@@ -260,7 +260,7 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
   };
 
   const handlePublish = async () => {
-    if (!content.trim() || (activeTab === "post" && !title.trim())) {
+    if (!content.trim() || ((activeTab === "post" || activeTab === "announcement") && !title.trim())) {
       alert("内容/标题不能为空");
       return;
     }
@@ -308,7 +308,7 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${adminPassword}`
         },
-        body: JSON.stringify({ type: activeTab, title, content: finalContent, tags: activeTab === "post" ? selectedTags : [] }),
+        body: JSON.stringify({ type: activeTab, title, content: finalContent, tags: (activeTab === "post" || activeTab === "announcement") ? selectedTags : [] }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -391,6 +391,15 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
           )}
         >
           <FileText className="w-4 h-4" />写长文
+        </button>
+        <button
+          onClick={() => setActiveTab("announcement")}
+          className={clsx(
+            "flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl text-sm font-medium transition-all duration-200",
+            activeTab === "announcement" ? "bg-white dark:bg-[#222] shadow-sm text-gray-900 dark:text-white" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#222]"
+          )}
+        >
+          <AlertCircle className="w-4 h-4" />发公告
         </button>
       </div>
 
@@ -536,7 +545,7 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
             {isSubmitting ? (
               <><Loader2 className="w-4 h-4 animate-spin" />{uploadProgress ? ` 上传图 ${uploadProgress}` : "正在发布"}</>
             ) : (
-              <><Send className="w-4 h-4" />发布{activeTab === "post" ? "长文" : "动态"}</>
+              <><Send className="w-4 h-4" />发布{activeTab === "post" ? "长文" : activeTab === "announcement" ? "公告" : "碎碎念"}</>
             )}
           </button>
         </div>
