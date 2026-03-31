@@ -6,6 +6,11 @@ if (!process.env.GITHUB_PAT) {
 
 export const octokit = new Octokit({
   auth: process.env.GITHUB_PAT,
+  request: {
+    fetch: (url: string, init: any) => {
+      return fetch(url, { ...init, cache: 'no-store' });
+    }
+  }
 });
 
 export const BLOG_REPO_OWNER = "xixiyhaha";

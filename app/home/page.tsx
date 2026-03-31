@@ -1,6 +1,6 @@
 ﻿import { HomeTemplate } from "@/components/home/HomeTemplate";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default function HomePage() {
   return <HomeTemplate showAdminControls={false} />;

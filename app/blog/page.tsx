@@ -6,7 +6,7 @@ function extractFirstImage(content: string) {
   return imgMatch ? imgMatch[1] : null;
 }
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
   const posts = await getAllPosts();

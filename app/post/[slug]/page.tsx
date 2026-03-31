@@ -12,13 +12,14 @@ import Link from "next/link";
 import { ArrowLeft, List } from "lucide-react";
 import React from "react";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function PostPage(
   props: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await props.params;
-  const post = await getPostBySlug(slug);
+  const params = await props.params;
+  const decodedSlug = decodeURIComponent(params.slug);
+  const post = await getPostBySlug(decodedSlug);
 
   if (!post) {
     notFound();

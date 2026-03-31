@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Megaphone, ArrowLeft } from "lucide-react";
 import { AnnouncementItem } from "@/components/home/AnnouncementItem";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function AnnouncementsPage() {
   const allPosts = await getAllPosts();
