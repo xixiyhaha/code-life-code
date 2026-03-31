@@ -12,6 +12,8 @@ import Link from "next/link";
 import { ArrowLeft, List } from "lucide-react";
 import React from "react";
 
+export const revalidate = 60;
+
 export default async function PostPage(
   props: { params: Promise<{ slug: string }> }
 ) {
@@ -94,7 +96,7 @@ export default async function PostPage(
           </div>
         </header>
 
-        <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
+        <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkBreaks]}
             rehypePlugins={[rehypeRaw, rehypeSlug]}

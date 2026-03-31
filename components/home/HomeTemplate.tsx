@@ -109,7 +109,7 @@ export async function HomeTemplate({ showAdminControls = false }: { showAdminCon
           
           {latestAnnouncement ? (
             <Link href={`/post/${latestAnnouncement.slug}`} className="group block">
-              <div className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors line-clamp-[8] prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-a:text-blue-500 whitespace-pre-wrap">
+              <div className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors line-clamp-[8] prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-a:text-blue-500">
                 <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                     {latestAnnouncement.content}
                   </ReactMarkdown>
