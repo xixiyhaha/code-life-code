@@ -74,7 +74,7 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
 
   useEffect(() => {
     localStorage.setItem(`draft-${activeTab}-content`, content);
-    if (activeTab === "post" || activeTab === "announcement") {
+    if (activeTab === "post") {
       localStorage.setItem(`draft-${activeTab}-title`, title);
       localStorage.setItem(`draft-${activeTab}-tags`, JSON.stringify(selectedTags));
     }
@@ -260,8 +260,8 @@ export function PostComposer({ onSuccess }: { onSuccess?: () => void }) {
   };
 
   const handlePublish = async () => {
-    if (!content.trim() || ((activeTab === "post" || activeTab === "announcement") && !title.trim())) {
-      alert("内容/标题不能为空");
+    if (!content.trim() || (activeTab === "post" && !title.trim())) {
+      alert("发布长文需填写标题，其他类型请确保内容不为空。");
       return;
     }
 
