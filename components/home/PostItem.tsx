@@ -11,7 +11,7 @@ import Link from "next/link";
 import { MessageCircle, Heart, MoreHorizontal, Trash2, Edit2, Loader2, Save, X, Tag } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import clsx from "clsx";
-import Giscus from "@giscus/react";
+import GiscusComments from "@/components/GiscusComments";
 
 export function PostItem({ post }: { post: Post }) {
   const router = useRouter();    const pathname = usePathname();  const [isAdmin, setIsAdmin] = useState(false);
@@ -286,17 +286,17 @@ export function PostItem({ post }: { post: Post }) {
 
       {post.type === "post" && post.title && (
         <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">   
-          <Link href={`/post/${post.slug}`} className="hover:text-blue-500 transition-colors">
+          <Link href={`${isAdmin ? '/admin' : ''}/post/${post.slug}`} className="hover:text-blue-500 transition-colors">
             {post.title}
           </Link>
         </h3>
       )}
 
-      {/* 文本渲染 */}
+      {/* 鏂囨湰娓叉煋 */}
       {post.type === "post" && post.tags && post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3 mt-1">
           {post.tags.map(tag => (
-            <Link key={tag} href={`/tags/${encodeURIComponent(tag)}`} className="text-xs font-semibold text-blue-500 hover:text-blue-600 transition-colors">
+            <Link key={tag} href={`${isAdmin ? '/admin' : ''}/tags/${encodeURIComponent(tag)}`} className="text-xs font-semibold text-blue-500 hover:text-blue-600 transition-colors">
               #{tag}
             </Link>
           ))}
@@ -383,22 +383,8 @@ export function PostItem({ post }: { post: Post }) {
 
       {/* Giscus Comments Area */}
       {showComments && (
-        <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/50">
-          <Giscus
-            id="comments"
-            repo="xixiyhaha/code-life-blog"
-            repoId="R_kgDORzI6uw"
-            category="Announcements"
-            categoryId="DIC_kwDORzI6u84C5iYB"
-            mapping="specific"
-            term={post.slug}
-            reactionsEnabled="1"
-            emitMetadata="0"
-            inputPosition="top"
-            theme="transparent_dark"
-            lang="zh-CN"
-            loading="lazy"
-          />
+        <div className="mt-4 border-t border-gray-100 dark:border-gray-800/50">
+          <GiscusComments term={post.slug} />
         </div>
       )}
 

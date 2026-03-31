@@ -166,7 +166,7 @@ export function AnnouncementItem({ post, isLatest = false }: { post: Post, isLat
         
         {!isEditing && (
           <div className="mt-4 pt-4 border-t border-gray-50 dark:border-gray-800/50">
-            <Link href={`/post/${post.slug}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1 w-max">
+            <Link href={`${isAdmin ? '/admin' : ''}/post/${post.slug}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1 w-max">
               查看全文 <span className="text-[10px]">→</span>
             </Link>
           </div>

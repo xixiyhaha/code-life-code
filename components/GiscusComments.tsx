@@ -3,7 +3,11 @@
 import Giscus from "@giscus/react";
 import { useEffect, useState } from "react";
 
-export default function GiscusComments() {
+interface Props {
+  term?: string;
+}
+
+export default function GiscusComments({ term }: Props) {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
@@ -27,10 +31,11 @@ export default function GiscusComments() {
       <Giscus
         id="comments"
         repo="xixiyhaha/code-life-blog"
-        repoId="R_kgDORzI6uw" // TODO: 去 https://giscus.app 获取
-        category="Announcements" 
-        categoryId="DIC_kwDORzI6u84C5iYB" // TODO: 去 https://giscus.app 获取
-        mapping="pathname"
+        repoId="R_kgDORzI6uw"
+        category="General" 
+        categoryId="DIC_kwDORzI6u84C5iYC"
+        mapping={term ? "specific" : "pathname"}
+        term={term}
         reactionsEnabled="1"
         emitMetadata="0"
         inputPosition="top"

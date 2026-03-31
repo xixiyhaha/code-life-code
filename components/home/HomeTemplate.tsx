@@ -58,7 +58,7 @@ export async function HomeTemplate({ showAdminControls = false }: { showAdminCon
                <span className="text-sm text-gray-400">暂无长文</span>
             ) : (
               recentLongPosts.map(p => (
-                <Link key={p.slug} href={`/post/${p.slug}`} className="text-gray-700 dark:text-gray-300 hover:text-blue-500 transition-colors text-sm line-clamp-2">
+                <Link key={p.slug} href={showAdminControls ? `/admin/post/${p.slug}` : `/post/${p.slug}`} className="text-gray-700 dark:text-gray-300 hover:text-blue-500 transition-colors text-sm line-clamp-2">
                   {p.title || '无标题'}
                 </Link>
               ))
@@ -70,7 +70,7 @@ export async function HomeTemplate({ showAdminControls = false }: { showAdminCon
               <h3 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">标签聚合</h3>
               <div className="flex flex-wrap gap-2">
                 {allTags.map(tag => (
-                   <Link key={tag} href={`/tags/${tag}`} className="px-3 py-1 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800/50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full transition-colors border border-gray-200 dark:border-gray-700/50">
+                   <Link key={tag} href={showAdminControls ? `/admin/tags/${tag}` : `/tags/${tag}`} className="px-3 py-1 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800/50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full transition-colors border border-gray-200 dark:border-gray-700/50">
                      #{tag}
                    </Link>
                 ))}

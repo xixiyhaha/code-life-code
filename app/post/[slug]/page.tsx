@@ -11,6 +11,8 @@ import { zhCN } from "date-fns/locale";
 import Link from "next/link";
 import { ArrowLeft, List } from "lucide-react";
 import React from "react";
+import { AdminAwareBackLink } from "@/components/ui/AdminAwareBackLink";
+import GiscusComments from "@/components/GiscusComments";
 
 export const dynamic = "force-dynamic";
 
@@ -45,9 +47,7 @@ export default async function PostPage(
       {/* Left Sidebar: TOC */}
       <aside className="hidden md:block">
         <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-4 custom-scrollbar">
-          <Link href="/home" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white mb-8 transition-colors">     
-            <ArrowLeft className="w-4 h-4" /> 返回主页
-          </Link>
+          <AdminAwareBackLink text="返回上一页" />
 
           {headings.length > 0 && (
             <div>
@@ -74,9 +74,7 @@ export default async function PostPage(
       {/* Main Content */}
       <article className="min-w-0">
         <div className="md:hidden mb-8">
-          <Link href="/home" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">     
-            <ArrowLeft className="w-4 h-4" /> 返回主页
-          </Link>
+          <AdminAwareBackLink text="返回上一页" />
         </div>
 
         <header className="mb-10">
@@ -114,6 +112,10 @@ export default async function PostPage(
           >
             {post.content}
           </ReactMarkdown>
+        </div>
+
+        <div className="mt-16">
+          <GiscusComments term={post.slug} />
         </div>
       </article>
     </div>

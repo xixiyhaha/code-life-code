@@ -2,6 +2,7 @@ import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 import { Megaphone, ArrowLeft } from "lucide-react";
 import { AnnouncementItem } from "@/components/home/AnnouncementItem";
+import { AdminAwareBackLink } from "@/components/ui/AdminAwareBackLink";
 
 export const dynamic = "force-dynamic";
 
@@ -12,9 +13,7 @@ export default async function AnnouncementsPage() {
   return (
     <div className="pt-24 pb-20 px-4 max-w-3xl mx-auto min-h-screen">
       <div className="mb-8">
-        <Link href="/home" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> 返回首页
-        </Link>
+        <AdminAwareBackLink text="返回主页" />
       </div>
 
       <div className="flex items-center gap-3 mb-10">
