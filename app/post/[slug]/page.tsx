@@ -2,6 +2,7 @@ import { getPostBySlug } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import rehypeSlug from "rehype-slug";
 import rehypeRaw from "rehype-raw";
 import GithubSlugger from "github-slugger";
@@ -93,9 +94,9 @@ export default async function PostPage(
           </div>
         </header>
 
-        <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
+        <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
           <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkBreaks]}
             rehypePlugins={[rehypeRaw, rehypeSlug]}
             components={{
               img: ({ node, ...props }) => (

@@ -6,6 +6,7 @@ import { StatsPanel } from "@/components/home/StatsPanel";
 import { Megaphone } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 export async function HomeTemplate({ showAdminControls = false }: { showAdminControls?: boolean }) {
   // 服务端拉取数据
@@ -103,13 +104,13 @@ export async function HomeTemplate({ showAdminControls = false }: { showAdminCon
               <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
                 <Megaphone className="w-4 h-4 animate-pulse" />
               </div>
-              <Link href="/announcements" className="text-sm font-bold text-gray-900 dark:text-gray-100 tracking-wide hover:text-blue-600 transition-colors">博客公告</Link>
-            </div>
-            
-            {latestAnnouncement ? (
-              <Link href={`/post/${latestAnnouncement.slug}`} className="group block">
-                <div className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors line-clamp-[8] prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-a:text-blue-500">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <Link href={showAdminControls ? "/admin/announcements" : "/announcements"} className="text-sm font-bold text-gray-900 dark:text-gray-100 tracking-wide hover:text-blue-600 transition-colors">博客公告</Link>
+          </div>
+          
+          {latestAnnouncement ? (
+            <Link href={`/post/${latestAnnouncement.slug}`} className="group block">
+              <div className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors line-clamp-[8] prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-a:text-blue-500 whitespace-pre-wrap">
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                     {latestAnnouncement.content}
                   </ReactMarkdown>
                 </div>

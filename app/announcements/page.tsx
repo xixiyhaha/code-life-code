@@ -2,6 +2,10 @@ import { getAllPosts } from "@/lib/posts";
 import Link from "next/link";
 import { Megaphone, ArrowLeft } from "lucide-react";
 
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
+
 export const revalidate = 60;
 
 export default async function AnnouncementsPage() {
@@ -47,8 +51,10 @@ export default async function AnnouncementsPage() {
                   </time>
                 </div>
                 
-                <div className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 line-clamp-4">
-                  {post.content.replace(/#|<[^>]+>/g, '').substring(0, 200)}...
+                <div className="prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 line-clamp-4 whitespace-pre-wrap">
+                  <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                    {post.content}
+                  </ReactMarkdown>
                 </div>
                 
                 <div className="mt-4 pt-4 border-t border-gray-50 dark:border-gray-800/50">
